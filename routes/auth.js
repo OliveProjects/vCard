@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
     if (!valid) return res.render('login', { error: 'Felaktig e-post eller lösenord' })
 
     req.session.user = { id: rows[0].id, email: rows[0].email, is_admin: rows[0].is_admin }
-    res.redirect('/dashboard')
+    res.redirect(rows[0].is_admin ? '/admin' : '/dashboard')
   } catch (err) {
     console.error(err)
     res.render('login', { error: 'Något gick fel, försök igen' })
