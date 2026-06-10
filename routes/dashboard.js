@@ -37,6 +37,18 @@ router.get('/', requireLogin, async (req, res) => {
   res.render('dashboard', { profile: rows[0] || null, saved: req.query.saved })
 })
 
+// Download QR code as PNG
+router.get('/qr.png', requireLogin, async (req, res) => {
+  const { rows } = await pool.query('SELECT slug FROM profiles WHERE user_id = $1', [req.session.user.id])
+  if (!rows.length) return res.status(404).send('Ingen profil')
+  const QRCode = require('qrcode')
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+  const buffer = await QRCode.toBuffer(`${baseUrl}/${rows[0].slug}`, { width: 400, margin: 2 })
+  res.setHeader('Content-Type', 'image/png')
+  res.setHeader('Content-Disposition', `attachment; filename="qr-${rows[0].slug}.png"`)
+  res.send(buffer)
+})
+
 // Save profile changes
 router.post('/save', requireLogin, upload.single('photo'), async (req, res) => {
   let { name, title, company, phone, email, website, linkedin, instagram, twitter, tiktok } = req.body

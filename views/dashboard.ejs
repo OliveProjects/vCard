@@ -114,6 +114,17 @@
           <div class="slug-display">/<%= profile.slug %></div>
           <small>NFC-chippet ska programmeras med: <%= process.env.BASE_URL || 'http://localhost:3000' %>/<%= profile.slug %></small>
         </div>
+
+        <div class="form-group">
+          <label>QR-kod</label>
+          <div class="qr-dashboard">
+            <img src="/dashboard/qr.png" alt="QR-kod" class="qr-dashboard-img">
+            <div>
+              <p style="font-size:13px; color:var(--muted); margin-bottom:10px;">Alternativ till NFC — fungerar med alla telefoner.</p>
+              <a href="/dashboard/qr.png" download class="btn btn-small">Ladda ner QR-kod</a>
+            </div>
+          </div>
+        </div>
       <% } %>
 
       <button type="submit" class="btn btn-primary">Spara ändringar</button>
