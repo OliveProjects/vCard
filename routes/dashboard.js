@@ -39,10 +39,13 @@ router.get('/', requireLogin, async (req, res) => {
 
 // Save profile changes
 router.post('/save', requireLogin, upload.single('photo'), async (req, res) => {
-  let { name, title, company, phone, email, website, linkedin } = req.body
+  let { name, title, company, phone, email, website, linkedin, instagram, twitter, tiktok } = req.body
   const addHttps = url => url && !/^https?:\/\//i.test(url) ? `https://${url}` : url
-  website  = addHttps(website)
-  linkedin = addHttps(linkedin)
+  website   = addHttps(website)
+  linkedin  = addHttps(linkedin)
+  instagram = addHttps(instagram)
+  twitter   = addHttps(twitter)
+  tiktok    = addHttps(tiktok)
   const userId = req.session.user.id
 
   const existing = await pool.query('SELECT id, photo_url FROM profiles WHERE user_id = $1', [userId])
@@ -62,16 +65,17 @@ router.post('/save', requireLogin, upload.single('photo'), async (req, res) => {
     await pool.query(`
       UPDATE profiles SET
         name=$1, title=$2, company=$3, phone=$4, email=$5,
-        website=$6, linkedin=$7, photo_url=$8, updated_at=NOW()
-      WHERE user_id=$9`,
-      [name, title, company, phone, email, website, linkedin, photo_url, userId]
+        website=$6, linkedin=$7, photo_url=$8,
+        instagram=$9, twitter=$10, tiktok=$11, updated_at=NOW()
+      WHERE user_id=$12`,
+      [name, title, company, phone, email, website, linkedin, photo_url, instagram, twitter, tiktok, userId]
     )
   } else {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     await pool.query(`
-      INSERT INTO profiles (user_id, slug, name, title, company, phone, email, website, linkedin, photo_url)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-      [userId, slug, name, title, company, phone, email, website, linkedin, photo_url]
+      INSERT INTO profiles (user_id, slug, name, title, company, phone, email, website, linkedin, photo_url, instagram, twitter, tiktok)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+      [userId, slug, name, title, company, phone, email, website, linkedin, photo_url, instagram, twitter, tiktok]
     )
   }
 

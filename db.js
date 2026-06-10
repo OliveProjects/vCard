@@ -26,6 +26,9 @@ const createTables = async () => {
       linkedin    VARCHAR(255),
       photo_url   VARCHAR(500),
       active      BOOLEAN DEFAULT true,
+      instagram   VARCHAR(255),
+      twitter     VARCHAR(255),
+      tiktok      VARCHAR(255),
       created_at  TIMESTAMP DEFAULT NOW(),
       updated_at  TIMESTAMP DEFAULT NOW()
     );
@@ -39,6 +42,10 @@ const createTables = async () => {
 
     CREATE INDEX IF NOT EXISTS idx_session_expire ON session(expire);
   `)
+  // Add social columns if they don't exist yet (migration)
+  await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS instagram VARCHAR(255)`)
+  await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS twitter   VARCHAR(255)`)
+  await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS tiktok    VARCHAR(255)`)
   console.log('Database tables ready')
 }
 

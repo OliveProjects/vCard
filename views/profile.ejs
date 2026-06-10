@@ -48,6 +48,21 @@
           <span class="link-icon">💼</span><span>LinkedIn</span>
         </a>
       <% } %>
+      <% if (profile.instagram) { %>
+        <a href="<%= profile.instagram %>" target="_blank" class="profile-link">
+          <span class="link-icon">📸</span><span>Instagram</span>
+        </a>
+      <% } %>
+      <% if (profile.twitter) { %>
+        <a href="<%= profile.twitter %>" target="_blank" class="profile-link">
+          <span class="link-icon">𝕏</span><span>X (Twitter)</span>
+        </a>
+      <% } %>
+      <% if (profile.tiktok) { %>
+        <a href="<%= profile.tiktok %>" target="_blank" class="profile-link">
+          <span class="link-icon">🎵</span><span>TikTok</span>
+        </a>
+      <% } %>
     </div>
 
     <% if (qrCode) { %>

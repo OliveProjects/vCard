@@ -49,7 +49,10 @@ router.get('/:slug/vcard.vcf', async (req, res) => {
       p.phone    ? `TEL;TYPE=CELL:${p.phone}`  : '',
       p.email    ? `EMAIL:${p.email}`           : '',
       p.website  ? `URL:${p.website}`           : '',
-      p.linkedin ? `X-SOCIALPROFILE;type=linkedin:${p.linkedin}` : '',
+      p.linkedin  ? `X-SOCIALPROFILE;type=linkedin:${p.linkedin}`   : '',
+      p.instagram ? `X-SOCIALPROFILE;type=instagram:${p.instagram}` : '',
+      p.twitter   ? `X-SOCIALPROFILE;type=twitter:${p.twitter}`     : '',
+      p.tiktok    ? `X-SOCIALPROFILE;type=tiktok:${p.tiktok}`       : '',
       p.photo_url ? `PHOTO;VALUE=URI:${p.photo_url}` : '',
       'END:VCARD'
     ].filter(Boolean).join('\r\n')
