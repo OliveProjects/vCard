@@ -18,7 +18,14 @@
       vCard
     </a>
     <div class="nav-links">
-      <span class="nav-user"><%= user.email %></span>
+      <div class="nav-user-info">
+        <% if (currentProfile?.photo_url) { %>
+          <img src="<%= currentProfile.photo_url %>" class="nav-avatar" alt="">
+        <% } else { %>
+          <div class="nav-avatar nav-avatar-placeholder"><%= (currentProfile?.name || user.email)[0].toUpperCase() %></div>
+        <% } %>
+        <span class="nav-user"><%= currentProfile?.name || user.email %></span>
+      </div>
       <a href="/dashboard">Min profil</a>
       <a href="/auth/logout">Logga ut</a>
     </div>

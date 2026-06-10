@@ -39,7 +39,10 @@ router.get('/', requireLogin, async (req, res) => {
 
 // Save profile changes
 router.post('/save', requireLogin, upload.single('photo'), async (req, res) => {
-  const { name, title, company, phone, email, website, linkedin } = req.body
+  let { name, title, company, phone, email, website, linkedin } = req.body
+  const addHttps = url => url && !/^https?:\/\//i.test(url) ? `https://${url}` : url
+  website  = addHttps(website)
+  linkedin = addHttps(linkedin)
   const userId = req.session.user.id
 
   const existing = await pool.query('SELECT id, photo_url FROM profiles WHERE user_id = $1', [userId])

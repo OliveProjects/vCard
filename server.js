@@ -21,9 +21,19 @@ app.use(session({
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
 }))
 
-// Make user available in all views
-app.use((req, res, next) => {
+// Make user + profile available in all views
+app.use(async (req, res, next) => {
   res.locals.user = req.session.user || null
+  res.locals.currentProfile = null
+  if (req.session.user) {
+    try {
+      const { rows } = await pool.query(
+        'SELECT name, photo_url, slug FROM profiles WHERE user_id = $1',
+        [req.session.user.id]
+      )
+      res.locals.currentProfile = rows[0] || null
+    } catch (_) {}
+  }
   next()
 })
 
