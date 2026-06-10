@@ -555,3 +555,41 @@ main.home p {
 
 /* ── Admin actions ── */
 .admin-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ── Danger zone ── */
+.danger-zone {
+  max-width: 680px;
+  margin-top: 48px;
+  padding: 24px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  background: #fff5f5;
+}
+
+.danger-zone h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--error);
+  margin-bottom: 8px;
+}
+
+.danger-zone p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.btn-danger {
+  background: var(--error);
+  color: #fff;
+  border-color: var(--error);
+}
+.btn-danger:hover { background: #b91c1c; border-color: #b91c1c; text-decoration: none; }
+
+.btn-danger-small {
+  background: #fff0f0;
+  color: var(--error);
+  border-color: #fecaca;
+}
+.btn-danger-small:hover { background: #fee2e2; }

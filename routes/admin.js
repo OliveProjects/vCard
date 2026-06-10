@@ -58,4 +58,20 @@ router.post('/reset-password/:id', requireAdmin, async (req, res) => {
   res.redirect(`/admin?reset=${encodeURIComponent(tempPassword)}&resetId=${req.params.id}`)
 })
 
+// Delete customer and all their data (GDPR)
+router.post('/delete/:id', requireAdmin, async (req, res) => {
+  try {
+    const profile = await pool.query('SELECT photo_url FROM profiles WHERE user_id = $1', [req.params.id])
+    if (profile.rows[0]?.photo_url?.startsWith('/uploads/')) {
+      const filePath = require('path').join(__dirname, '../public', profile.rows[0].photo_url)
+      require('fs').unlink(filePath, () => {})
+    }
+    await pool.query('DELETE FROM users WHERE id = $1', [req.params.id])
+    res.redirect('/admin?deleted=1')
+  } catch (err) {
+    console.error(err)
+    res.redirect('/admin?error=1')
+  }
+})
+
 module.exports = router

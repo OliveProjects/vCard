@@ -75,4 +75,22 @@ router.post('/save', requireLogin, upload.single('photo'), async (req, res) => {
   res.redirect('/dashboard?saved=1')
 })
 
+// Delete own account (GDPR)
+router.post('/delete-account', requireLogin, async (req, res) => {
+  const userId = req.session.user.id
+  try {
+    const profile = await pool.query('SELECT photo_url FROM profiles WHERE user_id = $1', [userId])
+    if (profile.rows[0]?.photo_url?.startsWith('/uploads/')) {
+      const filePath = path.join(__dirname, '../public', profile.rows[0].photo_url)
+      fs.unlink(filePath, () => {})
+    }
+    await pool.query('DELETE FROM users WHERE id = $1', [userId])
+    req.session.destroy()
+    res.redirect('/?deleted=1')
+  } catch (err) {
+    console.error(err)
+    res.redirect('/dashboard?error=1')
+  }
+})
+
 module.exports = router

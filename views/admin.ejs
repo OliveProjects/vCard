@@ -25,6 +25,7 @@
   <main class="admin">
     <h1>Admin</h1>
     <% if (created) { %><p class="success">Kund skapad!</p><% } %>
+    <% if (locals.deleted) { %><p class="success">Kund raderad.</p><% } %>
     <% if (locals.reset) { %>
       <div class="success">
         Nytt tillfälligt lösenord: <strong><%= locals.reset %></strong> — skicka detta till kunden.
@@ -86,6 +87,9 @@
                 </form>
                 <form method="POST" action="/admin/reset-password/<%= c.id %>" style="display:inline;">
                   <button type="submit" class="btn btn-small">Återställ lösenord</button>
+                </form>
+                <form method="POST" action="/admin/delete/<%= c.id %>" style="display:inline;" onsubmit="return confirm('Radera <%= c.name || c.email %> permanent?')">
+                  <button type="submit" class="btn btn-small btn-danger-small">Radera</button>
                 </form>
               </td>
             </tr>

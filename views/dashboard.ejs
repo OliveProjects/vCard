@@ -93,6 +93,14 @@
 
       <button type="submit" class="btn btn-primary">Spara ändringar</button>
     </form>
+
+    <div class="danger-zone">
+      <h2>Radera mitt konto</h2>
+      <p>All din data — profil, foto och inloggningsuppgifter — raderas permanent. Detta kan inte ångras.</p>
+      <form method="POST" action="/dashboard/delete-account" onsubmit="return confirm('Är du säker? All din data raderas permanent.')">
+        <button type="submit" class="btn btn-danger">Radera mitt konto</button>
+      </form>
+    </div>
   </main>
   <script>
     const zone      = document.getElementById('dropZone')
