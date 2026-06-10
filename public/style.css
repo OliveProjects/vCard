@@ -58,6 +58,14 @@ nav {
   font-size: 14px;
 }
 
+.nav-user {
+  font-size: 13px;
+  color: var(--muted);
+  padding-right: 4px;
+  border-right: 1px solid var(--border);
+  padding-right: 20px;
+}
+
 /* ── Buttons ── */
 .btn {
   display: inline-flex;
