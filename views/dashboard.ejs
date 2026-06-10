@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Min profil — vCard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-logo">vCard</a>
+    <div class="nav-links">
+      <% if (profile) { %><a href="/<%= profile.slug %>" target="_blank">Visa min sida →</a><% } %>
+      <a href="/auth/logout">Logga ut</a>
+    </div>
+  </nav>
+  <main class="dashboard">
+    <h1>Min profil</h1>
+    <% if (saved) { %><p class="success">Sparat!</p><% } %>
+
+    <form method="POST" action="/dashboard/save" class="profile-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Namn *</label>
+          <input type="text" name="name" value="<%= profile?.name || '' %>" required>
+        </div>
+        <div class="form-group">
+          <label>Titel</label>
+          <input type="text" name="title" value="<%= profile?.title || '' %>">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Företag</label>
+        <input type="text" name="company" value="<%= profile?.company || '' %>">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" name="phone" value="<%= profile?.phone || '' %>">
+        </div>
+        <div class="form-group">
+          <label>E-post (på kortet)</label>
+          <input type="email" name="email" value="<%= profile?.email || '' %>">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Webbplats</label>
+        <input type="url" name="website" placeholder="https://" value="<%= profile?.website || '' %>">
+      </div>
+
+      <div class="form-group">
+        <label>LinkedIn-URL</label>
+        <input type="url" name="linkedin" placeholder="https://linkedin.com/in/..." value="<%= profile?.linkedin || '' %>">
+      </div>
+
+      <div class="form-group">
+        <label>Foto-URL</label>
+        <input type="url" name="photo_url" placeholder="https://..." value="<%= profile?.photo_url || '' %>">
+        <small>Länk till en bild (t.ex. från LinkedIn eller er hemsida)</small>
+      </div>
+
+      <% if (profile) { %>
+        <div class="form-group">
+          <label>Din kortlänk</label>
+          <div class="slug-display">/<%= profile.slug %></div>
+          <small>NFC-chippet ska programmeras med: <%= process.env.BASE_URL || 'http://localhost:3000' %>/<%= profile.slug %></small>
+        </div>
+      <% } %>
+
+      <button type="submit" class="btn btn-primary">Spara ändringar</button>
+    </form>
+  </main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — vCard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-logo">vCard</a>
+    <div class="nav-links">
+      <a href="/auth/logout">Logga ut</a>
+    </div>
+  </nav>
+  <main class="admin">
+    <h1>Admin</h1>
+    <% if (created) { %><p class="success">Kund skapad!</p><% } %>
+
+    <section class="admin-section">
+      <h2>Skapa ny kund</h2>
+      <form method="POST" action="/admin/create" class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Namn</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Slug (URL)</label>
+            <input type="text" name="slug" placeholder="t.ex. kristoffer" pattern="[a-z0-9\-]+" required>
+            <small>Bara gemener, siffror och bindestreck</small>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>E-post (inloggning)</label>
+            <input type="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label>Tillfälligt lösenord</label>
+            <input type="text" name="password" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Skapa kund</button>
+      </form>
+    </section>
+
+    <section class="admin-section">
+      <h2>Alla kunder (<%= customers.length %>)</h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Namn</th>
+            <th>E-post</th>
+            <th>Slug</th>
+            <th>Status</th>
+            <th>Skapad</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% customers.forEach(c => { %>
+            <tr>
+              <td><%= c.name || '—' %></td>
+              <td><%= c.email %></td>
+              <td><% if (c.slug) { %><a href="/<%= c.slug %>" target="_blank">/<%= c.slug %></a><% } else { %>—<% } %></td>
+              <td><span class="status-badge <%= c.active ? 'active' : 'inactive' %>"><%= c.active ? 'Aktiv' : 'Inaktiv' %></span></td>
+              <td><%= new Date(c.created_at).toLocaleDateString('sv-SE') %></td>
+              <td>
+                <form method="POST" action="/admin/toggle/<%= c.id %>" style="display:inline;">
+                  <button type="submit" class="btn btn-small"><%= c.active ? 'Inaktivera' : 'Aktivera' %></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

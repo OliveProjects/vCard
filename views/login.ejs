@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logga in — vCard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-box">
+    <a href="/" class="nav-logo" style="display:block; text-align:center; margin-bottom:24px;">vCard</a>
+    <h1>Logga in</h1>
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+    <form method="POST" action="/auth/login">
+      <label>E-post</label>
+      <input type="email" name="email" required autofocus>
+      <label>Lösenord</label>
+      <input type="password" name="password" required>
+      <button type="submit" class="btn btn-primary btn-full">Logga in</button>
+    </form>
+  </div>
+</body>
+</html>

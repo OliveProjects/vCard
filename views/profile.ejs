@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profile.name %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="profile-page">
+  <div class="profile-card">
+
+    <% if (profile.photo_url) { %>
+      <img class="profile-photo" src="<%= profile.photo_url %>" alt="<%= profile.name %>">
+    <% } else { %>
+      <div class="profile-photo-placeholder"><%= profile.name ? profile.name[0].toUpperCase() : '?' %></div>
+    <% } %>
+
+    <h1 class="profile-name"><%= profile.name || '' %></h1>
+
+    <% if (profile.title || profile.company) { %>
+      <p class="profile-sub">
+        <%= profile.title || '' %><% if (profile.title && profile.company) { %> · <% } %><%= profile.company || '' %>
+      </p>
+    <% } %>
+
+    <div class="profile-actions">
+      <a href="/<%= profile.slug %>/vcard.vcf" class="btn btn-primary">Spara kontakt</a>
+    </div>
+
+    <div class="profile-links">
+      <% if (profile.phone) { %>
+        <a href="tel:<%= profile.phone %>" class="profile-link">
+          <span class="link-icon">📞</span><span><%= profile.phone %></span>
+        </a>
+      <% } %>
+      <% if (profile.email) { %>
+        <a href="mailto:<%= profile.email %>" class="profile-link">
+          <span class="link-icon">✉️</span><span><%= profile.email %></span>
+        </a>
+      <% } %>
+      <% if (profile.website) { %>
+        <a href="<%= profile.website %>" target="_blank" class="profile-link">
+          <span class="link-icon">🌐</span><span><%= profile.website.replace(/^https?:\/\//, '') %></span>
+        </a>
+      <% } %>
+      <% if (profile.linkedin) { %>
+        <a href="<%= profile.linkedin %>" target="_blank" class="profile-link">
+          <span class="link-icon">💼</span><span>LinkedIn</span>
+        </a>
+      <% } %>
+    </div>
+
+  </div>
+</body>
+</html>
