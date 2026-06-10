@@ -40,12 +40,16 @@ nav {
 }
 
 .nav-logo {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--brand);
   text-decoration: none;
   letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
+.nav-logo svg { flex-shrink: 0; }
 
 .nav-links {
   display: flex;
@@ -428,27 +432,126 @@ body.profile-page {
 .link-icon { font-size: 18px; flex-shrink: 0; }
 
 /* ── Home page ── */
+body.home-page { background: var(--bg); }
+
 main.home {
-  max-width: 640px;
-  margin: 80px auto;
+  max-width: 680px;
+  margin: 72px auto 0;
   padding: 0 24px;
   text-align: center;
 }
 
+.home-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--brand);
+  background: rgba(37,99,235,.08);
+  border: 1px solid rgba(37,99,235,.2);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
 main.home h1 {
-  font-size: 40px;
+  font-size: 48px;
   font-weight: 800;
-  letter-spacing: -1px;
-  margin-bottom: 16px;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 18px;
 }
 
 main.home p {
-  font-size: 18px;
+  font-size: 17px;
   color: var(--muted);
   margin-bottom: 32px;
+  line-height: 1.65;
 }
 
-main.home .btn {
-  padding: 13px 28px;
+.home-cta {
+  padding: 14px 32px;
   font-size: 15px;
+  border-radius: 12px;
 }
+
+.home-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 64px;
+  text-align: left;
+}
+
+.home-feature {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feature-icon { font-size: 22px; margin-bottom: 4px; }
+.home-feature strong { font-size: 14px; font-weight: 600; }
+.home-feature span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+.home-footer {
+  text-align: center;
+  padding: 48px 24px 32px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  main.home h1 { font-size: 34px; }
+  .home-features { grid-template-columns: 1fr; }
+}
+
+/* ── QR code on profile ── */
+.qr-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.qr-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.qr-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* ── Profile brand footer ── */
+.profile-brand {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.profile-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.profile-brand-link:hover { color: var(--brand); text-decoration: none; }
+
+/* ── Admin actions ── */
+.admin-actions { display: flex; gap: 6px; flex-wrap: wrap; }

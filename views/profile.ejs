@@ -50,6 +50,25 @@
       <% } %>
     </div>
 
+    <% if (qrCode) { %>
+      <div class="qr-section">
+        <p class="qr-label">Scanna för att spara</p>
+        <img src="<%= qrCode %>" alt="QR-kod" class="qr-image">
+      </div>
+    <% } %>
+
+    <div class="profile-brand">
+      <a href="/" class="profile-brand-link">
+        <svg width="14" height="14" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="4" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="7.5" cy="10" r="2.2" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="12" y1="8.5" x2="18" y2="8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="12" y1="11.5" x2="16" y2="11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        Skapat med vCard
+      </a>
+    </div>
+
   </div>
 </body>
 </html>

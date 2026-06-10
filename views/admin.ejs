@@ -8,14 +8,28 @@
 </head>
 <body>
   <nav>
-    <a href="/" class="nav-logo">vCard</a>
+    <a href="/" class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="4" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/>
+        <circle cx="7.5" cy="10" r="2.2" stroke="currentColor" stroke-width="1.6"/>
+        <line x1="12" y1="8.5" x2="18" y2="8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="12" y1="11.5" x2="16" y2="11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      vCard
+    </a>
     <div class="nav-links">
+      <a href="/dashboard">Min profil</a>
       <a href="/auth/logout">Logga ut</a>
     </div>
   </nav>
   <main class="admin">
     <h1>Admin</h1>
     <% if (created) { %><p class="success">Kund skapad!</p><% } %>
+    <% if (locals.reset) { %>
+      <div class="success">
+        Nytt tillfälligt lösenord: <strong><%= locals.reset %></strong> — skicka detta till kunden.
+      </div>
+    <% } %>
 
     <section class="admin-section">
       <h2>Skapa ny kund</h2>
@@ -66,9 +80,12 @@
               <td><% if (c.slug) { %><a href="/<%= c.slug %>" target="_blank">/<%= c.slug %></a><% } else { %>—<% } %></td>
               <td><span class="status-badge <%= c.active ? 'active' : 'inactive' %>"><%= c.active ? 'Aktiv' : 'Inaktiv' %></span></td>
               <td><%= new Date(c.created_at).toLocaleDateString('sv-SE') %></td>
-              <td>
+              <td class="admin-actions">
                 <form method="POST" action="/admin/toggle/<%= c.id %>" style="display:inline;">
                   <button type="submit" class="btn btn-small"><%= c.active ? 'Inaktivera' : 'Aktivera' %></button>
+                </form>
+                <form method="POST" action="/admin/reset-password/<%= c.id %>" style="display:inline;">
+                  <button type="submit" class="btn btn-small">Återställ lösenord</button>
                 </form>
               </td>
             </tr>

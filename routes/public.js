@@ -1,17 +1,14 @@
 const express = require('express')
 const router  = express.Router()
+const QRCode  = require('qrcode')
 const { pool } = require('../db')
 
-// Home page
 router.get('/', (req, res) => {
   res.render('home')
 })
 
-// Public vCard profile page — opened via NFC tap
 router.get('/:slug', async (req, res, next) => {
   const { slug } = req.params
-
-  // Ignore non-profile routes
   const reserved = ['auth', 'dashboard', 'admin', 'favicon.ico']
   if (reserved.includes(slug)) return next()
 
@@ -21,14 +18,18 @@ router.get('/:slug', async (req, res, next) => {
       [slug]
     )
     if (!rows.length) return res.status(404).render('404')
-    res.render('profile', { profile: rows[0] })
+
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+    const profileUrl = `${baseUrl}/${slug}`
+    const qrCode = await QRCode.toDataURL(profileUrl, { width: 160, margin: 1 })
+
+    res.render('profile', { profile: rows[0], qrCode })
   } catch (err) {
     console.error(err)
     res.status(500).send('Server error')
   }
 })
 
-// Download .vcf file
 router.get('/:slug/vcard.vcf', async (req, res) => {
   const { slug } = req.params
   try {

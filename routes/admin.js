@@ -49,4 +49,13 @@ router.post('/toggle/:id', requireAdmin, async (req, res) => {
   res.redirect('/admin')
 })
 
+// Reset password — generates a new temp password and shows it in admin
+router.post('/reset-password/:id', requireAdmin, async (req, res) => {
+  const chars = 'abcdefghjkmnpqrstuvwxyz23456789'
+  const tempPassword = Array.from({ length: 10 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+  const hash = await bcrypt.hash(tempPassword, 10)
+  await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [hash, req.params.id])
+  res.redirect(`/admin?reset=${encodeURIComponent(tempPassword)}&resetId=${req.params.id}`)
+})
+
 module.exports = router
