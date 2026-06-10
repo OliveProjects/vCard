@@ -18,7 +18,7 @@
     <h1>Min profil</h1>
     <% if (saved) { %><p class="success">Sparat!</p><% } %>
 
-    <form method="POST" action="/dashboard/save" class="profile-form">
+    <form method="POST" action="/dashboard/save" class="profile-form" enctype="multipart/form-data">
 
       <div class="form-row">
         <div class="form-group">
@@ -58,9 +58,21 @@
       </div>
 
       <div class="form-group">
-        <label>Foto-URL</label>
-        <input type="url" name="photo_url" placeholder="https://..." value="<%= profile?.photo_url || '' %>">
-        <small>Länk till en bild (t.ex. från LinkedIn eller er hemsida)</small>
+        <label>Foto</label>
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-content" id="dropContent">
+            <% if (profile?.photo_url) { %>
+              <img src="<%= profile.photo_url %>" alt="Nuvarande foto" class="drop-preview" id="preview">
+              <span class="drop-label" id="dropLabel">Dra en ny bild hit eller klicka för att byta</span>
+            <% } else { %>
+              <div class="drop-icon" id="dropIcon">📷</div>
+              <span class="drop-label" id="dropLabel">Dra bilden hit eller klicka för att välja</span>
+            <% } %>
+          </div>
+          <input type="file" name="photo" id="photoInput" accept="image/jpeg,image/png,image/webp" class="drop-input">
+        </div>
+        <small id="photoError" class="error-text" style="display:none;"></small>
+        <small>JPG, PNG eller WebP · Max 5 MB</small>
       </div>
 
       <% if (profile) { %>
@@ -74,5 +86,74 @@
       <button type="submit" class="btn btn-primary">Spara ändringar</button>
     </form>
   </main>
+  <script>
+    const zone      = document.getElementById('dropZone')
+    const input     = document.getElementById('photoInput')
+    const preview   = document.getElementById('preview')
+    const dropIcon  = document.getElementById('dropIcon')
+    const dropLabel = document.getElementById('dropLabel')
+    const errorEl   = document.getElementById('photoError')
+
+    const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
+    const MAX_MB  = 5
+
+    function showPreview(file) {
+      errorEl.style.display = 'none'
+
+      if (!ALLOWED.includes(file.type)) {
+        errorEl.textContent = 'Ogiltigt format — använd JPG, PNG eller WebP.'
+        errorEl.style.display = 'block'
+        input.value = ''
+        return
+      }
+      if (file.size > MAX_MB * 1024 * 1024) {
+        errorEl.textContent = `Bilden är för stor (max ${MAX_MB} MB).`
+        errorEl.style.display = 'block'
+        input.value = ''
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onload = e => {
+        // Show or update preview image
+        let img = document.getElementById('preview')
+        if (!img) {
+          img = document.createElement('img')
+          img.id = 'preview'
+          img.className = 'drop-preview'
+          if (dropIcon) dropIcon.remove()
+          zone.querySelector('.drop-zone-content').prepend(img)
+        }
+        img.src = e.target.result
+        dropLabel.textContent = file.name
+      }
+      reader.readAsDataURL(file)
+    }
+
+    zone.addEventListener('click', () => input.click())
+
+    input.addEventListener('change', () => {
+      if (input.files[0]) showPreview(input.files[0])
+    })
+
+    zone.addEventListener('dragover', e => {
+      e.preventDefault()
+      zone.classList.add('drag-over')
+    })
+
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'))
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault()
+      zone.classList.remove('drag-over')
+      const file = e.dataTransfer.files[0]
+      if (!file) return
+      // Transfer file to the hidden input
+      const dt = new DataTransfer()
+      dt.items.add(file)
+      input.files = dt.files
+      showPreview(file)
+    })
+  </script>
 </body>
 </html>

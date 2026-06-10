@@ -8,12 +8,12 @@ router.get('/', (req, res) => {
 })
 
 // Public vCard profile page — opened via NFC tap
-router.get('/:slug', async (req, res) => {
+router.get('/:slug', async (req, res, next) => {
   const { slug } = req.params
 
   // Ignore non-profile routes
   const reserved = ['auth', 'dashboard', 'admin', 'favicon.ico']
-  if (reserved.includes(slug)) return res.status(404).render('404')
+  if (reserved.includes(slug)) return next()
 
   try {
     const { rows } = await pool.query(

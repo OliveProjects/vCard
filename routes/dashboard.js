@@ -1,11 +1,32 @@
-const express = require('express')
-const router  = express.Router()
+const express  = require('express')
+const router   = express.Router()
+const multer   = require('multer')
+const path     = require('path')
+const fs       = require('fs')
 const { pool } = require('../db')
 
 const requireLogin = (req, res, next) => {
   if (!req.session.user) return res.redirect('/auth/login')
   next()
 }
+
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, '../public/uploads'),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase()
+    cb(null, `user-${req.session.user.id}-${Date.now()}${ext}`)
+  }
+})
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
+    const ext = path.extname(file.originalname).toLowerCase()
+    cb(null, allowed.includes(ext))
+  }
+})
 
 // Show edit form
 router.get('/', requireLogin, async (req, res) => {
@@ -17,11 +38,22 @@ router.get('/', requireLogin, async (req, res) => {
 })
 
 // Save profile changes
-router.post('/save', requireLogin, async (req, res) => {
-  const { name, title, company, phone, email, website, linkedin, photo_url } = req.body
+router.post('/save', requireLogin, upload.single('photo'), async (req, res) => {
+  const { name, title, company, phone, email, website, linkedin } = req.body
   const userId = req.session.user.id
 
-  const existing = await pool.query('SELECT id FROM profiles WHERE user_id = $1', [userId])
+  const existing = await pool.query('SELECT id, photo_url FROM profiles WHERE user_id = $1', [userId])
+
+  // If a new photo was uploaded, use it; otherwise keep the existing one
+  let photo_url = existing.rows[0]?.photo_url || null
+  if (req.file) {
+    // Delete old photo from disk if it was a local upload
+    if (photo_url && photo_url.startsWith('/uploads/')) {
+      const oldPath = path.join(__dirname, '../public', photo_url)
+      fs.unlink(oldPath, () => {})
+    }
+    photo_url = `/uploads/${req.file.filename}`
+  }
 
   if (existing.rows.length) {
     await pool.query(`
@@ -32,7 +64,6 @@ router.post('/save', requireLogin, async (req, res) => {
       [name, title, company, phone, email, website, linkedin, photo_url, userId]
     )
   } else {
-    // Create profile with slug derived from name
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     await pool.query(`
       INSERT INTO profiles (user_id, slug, name, title, company, phone, email, website, linkedin, photo_url)

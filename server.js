@@ -27,11 +27,11 @@ app.use((req, res, next) => {
   next()
 })
 
-// Routes
-app.use('/',          require('./routes/public'))
+// Routes — specific paths first, public slug-catcher last
 app.use('/auth',      require('./routes/auth'))
 app.use('/dashboard', require('./routes/dashboard'))
 app.use('/admin',     require('./routes/admin'))
+app.use('/',          require('./routes/public'))
 
 const PORT = process.env.PORT || 3000
 
